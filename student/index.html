@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Management System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #007bff;
+            color: white;
+        }
+
+        .delete-btn {
+            background: red;
+        }
+
+        .edit-btn {
+            background: green;
+            margin-right: 5px;
+        }
+
+        .delete-btn:hover {
+            background: darkred;
+        }
+
+        .edit-btn:hover {
+            background: darkgreen;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Student Management System</h1>
+
+    <form id="studentForm">
+        <input type="text" id="name" placeholder="Student Name" required>
+        <input type="number" id="age" placeholder="Age" required>
+        <input type="text" id="course" placeholder="Course" required>
+        <button type="submit" id="submitBtn">Add Student</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Course</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="studentTable"></tbody>
+    </table>
+</div>
+
+<script>
+    let students = [];
+    let editIndex = null;
+
+    document.getElementById("studentForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value;
+        const age = document.getElementById("age").value;
+        const course = document.getElementById("course").value;
+
+        if (editIndex === null) {
+            students.push({ name, age, course });
+        } else {
+            students[editIndex] = { name, age, course };
+            editIndex = null;
+            document.getElementById("submitBtn").innerText = "Add Student";
+        }
+
+        displayStudents();
+        this.reset();
+    });
+
+    function displayStudents() {
+        const table = document.getElementById("studentTable");
+        table.innerHTML = "";
+
+        students.forEach((student, index) => {
+            table.innerHTML += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${student.name}</td>
+                    <td>${student.age}</td>
+                    <td>${student.course}</td>
+                    <td>
+                        <button class="edit-btn" onclick="editStudent(${index})">Edit</button>
+                        <button class="delete-btn" onclick="deleteStudent(${index})">Delete</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function editStudent(index) {
+        document.getElementById("name").value = students[index].name;
+        document.getElementById("age").value = students[index].age;
+        document.getElementById("course").value = students[index].course;
+
+        editIndex = index;
+        document.getElementById("submitBtn").innerText = "Update Student";
+    }
+
+    function deleteStudent(index) {
+        students.splice(index, 1);
+        displayStudents();
+    }
+</script>
+
+</body>
+</html>
